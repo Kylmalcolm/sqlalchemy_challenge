@@ -27,8 +27,7 @@ def home():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/YYYY-MM-DD<br/>"
-        f"/api/v1.0/YYYY-MM-DD/YYYY-MM-DD"
+        f"/api/v1.0/<YYYY-MM-DD>/<YYYY-MM-DD>"
     )
 
 # @app.route("/api/v1.0/precipitation")
@@ -75,6 +74,24 @@ def tobs():
 
     station_data_12 = list(np.ravel(tobs_station_12))
     return jsonify(station_data_12)
+
+# @app.route("/api/v1.0/<YYYY-MM-DD>/<YYYY-MM-DD>")
+# def calc_temps(start_date, end_date):
+#     session = Session(engine)
+
+#     canonicalized = YYYY-MM-DD.replace(" ", "")
+#     for date in justice_league_members:
+#         search_term = character["superhero"].replace(" ", "")
+
+#         if search_term == canonicalized:
+#             return jsonify(character)
+
+#     return jsonify({"error": "Character not found."}), 404
+
+#     session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+#         filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
+
+#     session.close()
 
 if __name__ == "__main__":
     app.run(debug=True)
