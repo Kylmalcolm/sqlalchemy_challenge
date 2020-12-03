@@ -88,31 +88,39 @@ def tobs():
 @app.route("/api/v1.0/<date>")
 def stats_temps(date):
 
-    date = datetime.strptime(date, "%Y-%m-%d").date()
+    try:
+        date = datetime.strptime(date, "%Y-%m-%d").date()
 
-    session = Session(engine)
+        session = Session(engine)
 
-    start_min_avg_max = session.query(func.min(Measurement.tobs), func.round(func.avg(Measurement.tobs),2), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= date).all()
+        start_min_avg_max = session.query(func.min(Measurement.tobs), func.round(func.avg(Measurement.tobs),2), func.max(Measurement.tobs)).\
+            filter(Measurement.date >= date).all()
 
-    session.close()
+        session.close()
 
-    return jsonify(start_min_avg_max)
+        return jsonify(start_min_avg_max)
+
+    except ValueError:
+        return (f"Date not in YYYY-MM-DD format or not in data set.")
 
 @app.route("/api/v1.0/<start_date>/<end_date>")
 def calc_temps(start_date, end_date):
 
-    start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-    end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+    try:
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
-    session = Session(engine)
+        session = Session(engine)
 
-    min_avg_max = session.query(func.min(Measurement.tobs), func.round(func.avg(Measurement.tobs),2), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
+        min_avg_max = session.query(func.min(Measurement.tobs), func.round(func.avg(Measurement.tobs),2), func.max(Measurement.tobs)).\
+            filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 
-    session.close()
+        session.close()
 
-    return jsonify(min_avg_max)
+        return jsonify(min_avg_max)
+    
+    except ValueError:
+        return (f"Date not in YYYY-MM-DD format or not in data set.")
 
 if __name__ == "__main__":
     app.run(debug=True)
