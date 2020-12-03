@@ -103,20 +103,16 @@ def stats_temps(date):
 def calc_temps(start_date, end_date):
 
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-    end_date_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+    end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
     session = Session(engine)
 
-    min_avg_max = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+    min_avg_max = session.query(func.min(Measurement.tobs), func.round(func.avg(Measurement.tobs),2), func.max(Measurement.tobs)).\
         filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
 
     session.close()
 
-    if search_term == canonicalized:
-        return jsonify(min_avg_max)
-
-    return jsonify({"error": "Date not found."}), 404
-
+    return jsonify(min_avg_max)
 
 if __name__ == "__main__":
     app.run(debug=True)
